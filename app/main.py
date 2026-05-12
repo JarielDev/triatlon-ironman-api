@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date
 from app.strava_service import get_strava_activities  # Importamos tu nuevo servicio
+from app.models import SyncResponse
 
 app = FastAPI(title="Triathlon Ironman Tracker")
 
@@ -29,11 +30,14 @@ def get_workouts():
     return {"workouts": my_workouts}
 
 # --- NUEVO ENDPOINT PARA STRAVA ---
-@app.get("/strava-sync/")
+# <-- Agregamos response_model=SyncResponse en esta línea
+@app.get("/strava-sync/", response_model=SyncResponse) 
 async def sync_strava():
-    try:
-        # Llamamos a la función asíncrona que creaste
-        data = await get_strava_activities()
-        return {"message": "Sincronización exitosa con Strava", "total_activities": len(data), "data": data}
-    except Exception as e:
-        return {"error": str(e), "message": "Revisa tus credenciales en el archivo .env"}
+    activities = await get_strava_activities()
+    
+    # Devolvemos el diccionario estructurado respetando el modelo
+    return {
+        "message": "Sincronización exitosa con Strava",
+        "total_activities": len(activities),
+        "data": activities
+    }
