@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import List
 
 class StravaActivity(BaseModel):
+    strava_id: int
     name: str
     sport: str
     distance_km: float

@@ -43,6 +43,7 @@ async def get_strava_activities():
 
     cleaned_data = [
         {
+            "strava_id": activity["id"],
             "name": activity["name"],
             "sport": activity["type"], 
             "distance_km": round(activity["distance"] / 1000, 2), # De metros a km, redondeado a 2 decimales
